@@ -1,9 +1,15 @@
 import { SingUpController } from './singup'
 import { MissingParamError } from '../erros/missing-parm-error'
 
+
+const makeSut = (): SingUpController => {
+    return new SingUpController
+}
+
+
 describe('SingUp Controller', () => {
   test('Should return 400 if no name is provided', () => {
-    const sut = new SingUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         email: 'any_email@example.com',
@@ -18,7 +24,7 @@ describe('SingUp Controller', () => {
   })
 
   test('Should return 400 if no email is provided', () => {
-    const sut = new SingUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         name: 'any_name',
@@ -33,7 +39,7 @@ describe('SingUp Controller', () => {
   })
 
   test('Should return 400 if no password is provided', () => {
-    const sut = new SingUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         name: 'any_name',
@@ -47,7 +53,7 @@ describe('SingUp Controller', () => {
     expect(httpResponse.body).toEqual(new MissingParamError('password'))
   })
   test('Should return 400 if no password confirmation is provided', () => {
-    const sut = new SingUpController()
+    const sut = makeSut()
     const httpRequest = {
       body: {
         name: 'any_name',
