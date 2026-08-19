@@ -1,4 +1,4 @@
-import { SingUpController } from "./singup"
+import { SingUpController } from './singup'
 
 describe('SingUp Controller', () => {
   test('Should return 400 if no name is provided', () => {
@@ -13,5 +13,6 @@ describe('SingUp Controller', () => {
 
     const httpResponse = sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new Error('Missing Param: name'))
   })
 })
