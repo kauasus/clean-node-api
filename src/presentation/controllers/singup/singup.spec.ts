@@ -1,6 +1,11 @@
 import { SingUpController } from './singup'
 import { MissingParamError, InvalidParamError, ServerError } from '../../erros'
-import { EmailValidator, AccountModel, AddAccount, AddAccountModel } from './singup-protocols'
+import {
+  EmailValidator,
+  AccountModel,
+  AddAccount,
+  AddAccountModel,
+} from './singup-protocols'
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -47,7 +52,7 @@ describe('SingUp Controller', () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
-        email: 'any_email@example.com',
+        email: 'any_email@mail.com',
         password: 'any_password',
         passwordConfirmation: 'any_password',
       },
@@ -78,7 +83,7 @@ describe('SingUp Controller', () => {
     const httpRequest = {
       body: {
         name: 'any_name',
-        email: 'any_email@example.com',
+        email: 'any_email@mail.com',
         passwordConfirmation: 'any_password',
       },
     }
@@ -92,7 +97,7 @@ describe('SingUp Controller', () => {
     const httpRequest = {
       body: {
         name: 'any_name',
-        email: 'any_email@example.com',
+        email: 'any_email@mail.com',
         password: 'any_password',
       },
     }
@@ -108,7 +113,7 @@ describe('SingUp Controller', () => {
     const httpRequest = {
       body: {
         name: 'any_name',
-        email: 'any_email@example.com',
+        email: 'any_email@mail.com',
         password: 'any_password',
         passwordConfirmation: 'invalid_password',
       },
@@ -126,7 +131,7 @@ describe('SingUp Controller', () => {
     const httpRequest = {
       body: {
         name: 'any_name',
-        email: 'invalid_email@example.com',
+        email: 'invalid_email@mail.com',
         password: 'any_password',
         passwordConfirmation: 'any_password',
       },
@@ -144,14 +149,14 @@ describe('SingUp Controller', () => {
     const httpRequest = {
       body: {
         name: 'any_name',
-        email: 'any_email@example.com',
+        email: 'any_email@mail.com',
         password: 'any_password',
         passwordConfirmation: 'any_password',
       },
     }
 
     sut.handle(httpRequest)
-    expect(isValidSpy).toHaveBeenCalledWith('any_email@example.com')
+    expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
   })
 })
 test('Should return 500 if AddAccount throws', () => {
@@ -162,7 +167,7 @@ test('Should return 500 if AddAccount throws', () => {
   const httpRequest = {
     body: {
       name: 'any_name',
-      email: 'any_email@example.com',
+      email: 'any_email@mail.com',
       password: 'any_password',
       passwordConfirmation: 'any_password',
     },
@@ -180,7 +185,7 @@ test('Should return 500 if no EmailValidator throws', () => {
   const httpRequest = {
     body: {
       name: 'any_name',
-      email: 'any_email@example.com',
+      email: 'any_email@mail.com',
       password: 'any_password',
       passwordConfirmation: 'any_password',
     },
@@ -196,7 +201,7 @@ test('Should call AddAccount with correct values', () => {
   const httpRequest = {
     body: {
       name: 'any_name',
-      email: 'any_email@example.com',
+      email: 'any_email@mail.com',
       password: 'any_password',
       passwordConfirmation: 'any_password',
     },
@@ -205,7 +210,27 @@ test('Should call AddAccount with correct values', () => {
   sut.handle(httpRequest)
   expect(addSpy).toHaveBeenCalledWith({
     name: 'any_name',
-    email: 'any_email@example.com',
+    email: 'any_email@mail.com',
     password: 'any_password',
+  })
+})
+test('Should return 200 if valid data is provided', () => {
+  const { sut } = makeSut()
+  const httpRequest = {
+    body: {
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password',
+      passwordConfirmation: 'valid_password',
+    },
+  }
+
+  const httpResponse = sut.handle(httpRequest)
+  expect(httpResponse.statusCode).toBe(200)
+  expect(httpResponse.body).toEqual({
+    id: 'valid_id',
+    name: 'valid_name',
+    email: 'valid_email@mail.com',
+    password: 'valid_password',
   })
 })
