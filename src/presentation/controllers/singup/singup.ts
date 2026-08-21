@@ -6,8 +6,7 @@ import {
   AddAccount,
 } from './singup-protocols'
 import { MissingParamError, InvalidParamError } from '../../erros'
-import { badRequest, serverError } from '../../helpers/helper'
-import { ok } from '../../helpers/helper'
+import { badRequest, serverError, ok } from '../../helpers/helper'
 
 export class SingUpController implements Controller {
   private readonly emailValidator: EmailValidator
@@ -42,13 +41,8 @@ export class SingUpController implements Controller {
         email,
         password,
       })
-      
-      return {
-        
-        statusCode: 200,
-        body: account
-      }
 
+      return ok(account)
     } catch (error) {
       return serverError()
     }
