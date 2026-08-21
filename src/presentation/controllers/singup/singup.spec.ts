@@ -154,6 +154,24 @@ describe('SingUp Controller', () => {
     expect(isValidSpy).toHaveBeenCalledWith('any_email@example.com')
   })
 })
+test('Should return 500 if AddAccount throws', () => {
+  const { sut, addAccontuStub } = makeSut()
+  jest.spyOn(addAccontuStub, 'add').mockImplementationOnce(() => {
+    throw new Error()
+  })
+  const httpRequest = {
+    body: {
+      name: 'any_name',
+      email: 'any_email@example.com',
+      password: 'any_password',
+      passwordConfirmation: 'any_password',
+    },
+  }
+
+  const httpResponse = sut.handle(httpRequest)
+  expect(httpResponse.statusCode).toBe(500)
+  expect(httpResponse.body).toEqual(new ServerError())
+})
 test('Should return 500 if no EmailValidator throws', () => {
   const { sut, emailValidatorStub } = makeSut()
   jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
