@@ -37,12 +37,18 @@ export class SingUpController implements Controller {
       if (!isValid) {
         return badRequest(new InvalidParamError('email'))
       }
-      this.addAccount.add({
+      const account = this.addAccount.add({
         name,
         email,
         password,
       })
-      return ok(null)
+      
+      return {
+        
+        statusCode: 200,
+        body: account
+      }
+
     } catch (error) {
       return serverError()
     }
